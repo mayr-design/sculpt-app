@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SCULPT</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0b09;
+  --bg2: #141210;
+  --bg3: #1c1916;
+  --bg4: #242018;
+  --surface: #1a1714;
+  --border: #2c2820;
+  --border2: #3a332a;
+  --text: #f2ede6;
+  --text2: #9e9488;
+  --text3: #5e574e;
+  --gold: #c9a96e;
+  --gold2: #b8904a;
+  --gold-glow: rgba(201,169,110,0.12);
+  --gold-subtle: rgba(201,169,110,0.06);
+  --green: #7aaa8a;
+  --green2: #5a8a6a;
+  --green-bg: rgba(122,170,138,0.1);
+  --blue: #7a9fc2;
+  --blue-bg: rgba(122,159,194,0.1);
+  --orange: #c2865a;
+  --orange-bg: rgba(194,134,90,0.1);
+  --rose: #c27a8a;
+  --rose-bg: rgba(194,122,138,0.1);
+  --red: #b06060;
+  --radius: 14px;
+  --radius-sm: 9px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter Tight', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── HEADER ── */
+.app-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(12,11,9,0.96);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+}
+.header-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 0 8px;
+}
+.logo {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 20px; font-weight: 700; font-style: normal;
+  color: var(--gold); letter-spacing: 4px; text-transform: uppercase; line-height: 1;
+}
+.logo-sub {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 9px; color: var(--text3);
+  letter-spacing: 3px; text-transform: uppercase;
+  margin-top: 1px;
+}
+.nav-tabs {
+  display: flex; gap: 2px;
+  padding-bottom: 10px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.nav-tab {
+  flex-shrink: 0; padding: 6px 16px;
+  border-radius: 100px; border: 1px solid var(--border);
+  background: transparent; color: var(--text3);
+  cursor: pointer; font-family: 'Inter Tight', sans-serif;
+  font-size: 11px; letter-spacing: 1.5px;
+  text-transform: uppercase; transition: all 0.2s;
+}
+.nav-tab.active {
+  background: var(--gold); border-color: var(--gold);
+  color: var(--bg); font-weight: 600;
+}
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── DAY PILLS ── */
+.day-selector {
+  padding: 14px 16px 0;
+  display: flex; gap: 6px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.day-pill {
+  flex-shrink: 0; padding: 8px 16px;
+  border-radius: 100px; border: 1px solid var(--border);
+  background: transparent; color: var(--text3);
+  cursor: pointer; font-family: 'Inter Tight', sans-serif;
+  font-size: 11px; transition: all 0.2s; white-space: nowrap;
+}
+.day-pill.active {
+  background: var(--bg3); border-color: var(--gold); color: var(--text);
+}
+.day-pill.done { border-color: var(--green); color: var(--green); }
+
+/* ── DAY CONTENT ── */
+.day-content { padding: 0 16px 120px; }
+
+.day-header { padding: 18px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.day-title {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 24px; font-weight: 600; letter-spacing: -0.5px; color: var(--text);
+  line-height: 1.2;
+}
+.day-subtitle {
+  font-size: 10px; color: var(--text3);
+  letter-spacing: 2.5px; text-transform: uppercase; margin-top: 4px;
+}
+
+/* ── WHY DROPDOWN ── */
+.why-block {
+  background: var(--gold-subtle);
+  border: 1px solid rgba(201,169,110,0.2);
+  border-radius: var(--radius);
+  margin-bottom: 16px; overflow: hidden;
+}
+.why-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; cursor: pointer;
+  background: transparent; border: none; text-align: left;
+}
+.why-toggle-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--gold);
+  letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Inter Tight', sans-serif;
+  font-weight: 600;
+}
+.why-chevron { color: var(--gold); font-size: 11px; transition: transform 0.3s; }
+.why-block.open .why-chevron { transform: rotate(180deg); }
+.why-body {
+  display: none; padding: 0 16px 16px;
+  border-top: 1px solid rgba(201,169,110,0.15);
+}
+.why-block.open .why-body { display: block; }
+.why-text {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 15px; font-style: italic;
+  color: var(--text2); line-height: 1.7; padding-top: 12px;
+}
+.why-text p { margin-bottom: 8px; }
+.why-text p:last-child { margin-bottom: 0; }
+.why-text strong { color: var(--gold); font-style: normal; font-family: 'Inter Tight', sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; display: block; margin-top: 10px; margin-bottom: 2px; }
+
+/* ── STRETCH WARM-UP ── */
+.stretch-block {
+  background: var(--rose-bg);
+  border: 1px solid rgba(194,122,138,0.2);
+  border-radius: var(--radius); margin-bottom: 16px; overflow: hidden;
+}
+.stretch-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; cursor: pointer;
+  background: transparent; border: none; text-align: left;
+}
+.stretch-badge {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11px; color: var(--rose);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  font-family: 'Inter Tight', sans-serif; font-weight: 600;
+}
+.stretch-chevron { color: var(--rose); font-size: 11px; transition: transform 0.3s; }
+.stretch-block.open .stretch-chevron { transform: rotate(180deg); }
+.stretch-body {
+  display: none; padding: 0 16px 16px;
+  border-top: 1px solid rgba(194,122,138,0.15);
+}
+.stretch-block.open .stretch-body { display: block; }
+.stretch-list { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; }
+.stretch-item {
+  background: rgba(194,122,138,0.08);
+  border-radius: var(--radius-sm); padding: 11px 13px;
+}
+.stretch-name { font-size: 12px; color: var(--text); font-weight: 500; margin-bottom: 2px; }
+.stretch-detail { font-size: 11px; color: var(--text2); }
+
+/* ── FLOOR BADGE ── */
+.floor-section { margin-bottom: 20px; }
+.floor-label {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 13px; border-radius: var(--radius-sm);
+  margin-bottom: 8px; font-size: 10px; letter-spacing: 0.5px;
+}
+.floor-label.bottom {
+  background: var(--blue-bg); border: 1px solid rgba(122,159,194,0.22); color: var(--blue);
+}
+.floor-label.top {
+  background: var(--orange-bg); border: 1px solid rgba(194,134,90,0.22); color: var(--orange);
+}
+
+/* ── EXERCISE CARD ── */
+.ex-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 8px; overflow: hidden;
+  transition: border-color 0.2s;
+}
+.ex-card:hover { border-color: var(--border2); }
+.ex-card.custom-ex { border-left: 3px solid var(--green); }
+
+.ex-header {
+  padding: 14px 15px; cursor: pointer;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+}
+.ex-left { flex: 1; min-width: 0; }
+.ex-name { font-size: 13px; color: var(--text); font-weight: 600; margin-bottom: 5px; }
+.ex-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.ex-tag {
+  padding: 2px 8px; border-radius: 100px;
+  font-size: 10px; border: 1px solid var(--border2); color: var(--text3);
+  font-family: 'Inter Tight', sans-serif;
+}
+.ex-tag.primary {
+  border-color: rgba(201,169,110,0.4); color: var(--gold);
+  background: var(--gold-subtle);
+}
+.ex-meta { display: flex; gap: 10px; align-items: center; margin-top: 7px; }
+.ex-meta-chip { font-size: 10px; color: var(--text3); }
+.ex-meta-chip span { color: var(--text2); }
+.ex-chevron { color: var(--text3); font-size: 11px; transition: transform 0.3s; flex-shrink: 0; margin-top: 2px; }
+.ex-card.open .ex-chevron { transform: rotate(180deg); }
+
+.ex-body {
+  display: none; padding: 0 15px 15px;
+  border-top: 1px solid var(--border); padding-top: 14px;
+}
+.ex-card.open .ex-body { display: block; }
+
+/* weight row */
+.weight-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.weight-lbl { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; flex-shrink: 0; }
+.weight-inp {
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: 'Inter Tight', sans-serif; font-size: 13px;
+  padding: 7px 12px; width: 110px; outline: none; transition: border-color 0.2s;
+}
+.weight-inp:focus { border-color: var(--gold); }
+.saved-tag { font-size: 10px; color: var(--green); opacity: 0; transition: opacity 0.3s; letter-spacing: 1px; }
+.saved-tag.show { opacity: 1; }
+
+/* info blocks */
+.info-row { display: flex; flex-direction: column; gap: 8px; }
+.info-block {
+  background: var(--bg3); border-radius: var(--radius-sm);
+  padding: 11px 13px;
+}
+.info-lbl {
+  font-size: 9px; color: var(--text3);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;
+  font-family: 'Inter Tight', sans-serif;
+}
+.info-txt { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.info-txt.tip {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 14px; font-weight: 300; letter-spacing: 0.2px; color: var(--gold); line-height: 1.7;
+}
+
+/* why-this dropdown inside exercise */
+.ex-why-block {
+  background: var(--gold-subtle);
+  border: 1px solid rgba(201,169,110,0.15);
+  border-radius: var(--radius-sm); margin-top: 8px; overflow: hidden;
+}
+.ex-why-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 13px; cursor: pointer; background: transparent; border: none;
+}
+.ex-why-lbl {
+  font-size: 10px; color: var(--gold);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  font-family: 'Inter Tight', sans-serif; font-weight: 600;
+}
+.ex-why-chev { color: var(--gold); font-size: 10px; transition: transform 0.25s; }
+.ex-why-block.open .ex-why-chev { transform: rotate(180deg); }
+.ex-why-body {
+  display: none; padding: 0 13px 12px;
+  border-top: 1px solid rgba(201,169,110,0.12);
+}
+.ex-why-block.open .ex-why-body { display: block; }
+.ex-why-text {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 13px; font-style: italic;
+  color: var(--text2); line-height: 1.7; padding-top: 10px;
+}
+
+/* complete + add */
+.complete-btn {
+  width: 100%; padding: 16px; background: var(--gold);
+  border: none; border-radius: var(--radius); color: var(--bg);
+  font-family: 'Inter Tight', sans-serif; font-size: 11px;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  cursor: pointer; margin-top: 20px; transition: all 0.2s; font-weight: 600;
+}
+.complete-btn:hover { background: var(--gold2); }
+.complete-btn.done { background: var(--green); }
+
+.add-btn {
+  width: 100%; padding: 14px; background: transparent;
+  border: 1px dashed var(--border2); border-radius: var(--radius);
+  color: var(--text3); font-family: 'Inter Tight', sans-serif;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer; margin-top: 8px; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.add-btn:hover { border-color: var(--green); color: var(--green); }
+
+.custom-section-title {
+  font-size: 9px; color: var(--green); letter-spacing: 2px;
+  text-transform: uppercase; padding: 10px 0 8px;
+  border-bottom: 1px solid rgba(122,170,138,0.2); margin-bottom: 8px;
+}
+.remove-btn {
+  background: transparent; border: 1px solid rgba(176,96,96,0.3);
+  border-radius: var(--radius-sm); color: var(--red);
+  font-family: 'Inter Tight', sans-serif; font-size: 10px;
+  padding: 5px 10px; cursor: pointer; letter-spacing: 1px;
+  margin-top: 8px; transition: all 0.2s;
+}
+.remove-btn:hover { background: rgba(176,96,96,0.1); }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  z-index: 200; display: none; align-items: flex-end; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+@media (min-width: 600px) { .modal-overlay { align-items: center; } }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--radius) var(--radius) 0 0;
+  width: 100%; max-width: 600px; max-height: 88vh;
+  overflow: hidden; display: flex; flex-direction: column;
+  animation: slideUp 0.28s ease;
+}
+@media (min-width: 600px) { .modal { border-radius: var(--radius); } }
+@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-head {
+  padding: 18px 18px 14px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title { font-family: 'Inter Tight', sans-serif; font-size: 20px; font-weight: 400; }
+.modal-close {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text2); cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-tabs { display: flex; border-bottom: 1px solid var(--border); }
+.modal-tab {
+  flex: 1; padding: 11px; background: transparent; border: none;
+  color: var(--text3); font-family: 'Inter Tight', sans-serif; font-size: 10px;
+  letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all 0.2s;
+}
+.modal-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.modal-body { padding: 18px; overflow-y: auto; flex: 1; }
+.form-group { margin-bottom: 13px; }
+.form-lbl {
+  display: block; font-size: 9px; color: var(--text3);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px;
+}
+.form-inp, .form-sel, .form-ta {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: 'Inter Tight', sans-serif; font-size: 13px;
+  padding: 9px 12px; outline: none; transition: border-color 0.2s;
+}
+.form-inp:focus, .form-sel:focus, .form-ta:focus { border-color: var(--gold); }
+.form-sel option { background: var(--bg3); }
+.form-ta { resize: vertical; min-height: 72px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.modal-submit {
+  width: 100%; padding: 14px; background: var(--green);
+  border: none; border-radius: var(--radius); color: var(--bg);
+  font-family: 'Inter Tight', sans-serif; font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer; margin-top: 6px; font-weight: 600; transition: all 0.2s;
+}
+.modal-submit:hover { background: var(--green2); }
+.copy-filters { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.copy-filter-sel {
+  flex: 1; min-width: 130px; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: var(--radius-sm);
+  color: var(--text); font-family: 'Inter Tight', sans-serif;
+  font-size: 12px; padding: 8px 10px; outline: none;
+}
+.copy-item {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 11px 13px;
+  margin-bottom: 6px; cursor: pointer; transition: all 0.2s;
+}
+.copy-item:hover { border-color: var(--green); background: rgba(122,170,138,0.05); }
+.copy-item-name { font-size: 13px; color: var(--text); margin-bottom: 2px; }
+.copy-item-meta { font-size: 10px; color: var(--text3); }
+
+/* ── DASHBOARD ── */
+.dash-content { padding: 16px 16px 100px; }
+.dash-hero { padding: 20px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.dash-greeting {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 28px; font-weight: 600; letter-spacing: -0.5px; line-height: 1.2;
+}
+.dash-date { font-size: 10px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
+.streak-card {
+  background: linear-gradient(135deg, rgba(201,169,110,0.1), rgba(184,144,74,0.04));
+  border: 1px solid rgba(201,169,110,0.25); border-radius: var(--radius);
+  padding: 18px 20px; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 16px;
+}
+.streak-flame { font-size: 36px; line-height: 1; }
+.streak-num { font-family: 'Inter Tight', sans-serif; font-size: 46px; font-weight: 700; letter-spacing: -1px; color: var(--gold); line-height: 1; }
+.streak-lbl { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+.stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px; }
+.stat-val { font-family: 'Inter Tight', sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.5px; color: var(--gold); line-height: 1; margin-bottom: 3px; }
+.stat-lbl { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; }
+.stat-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.section-head {
+  font-size: 9px; color: var(--text3); letter-spacing: 2.5px;
+  text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-head::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.muscle-bars { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.mbar-row { display: flex; align-items: center; gap: 10px; }
+.mbar-lbl { font-size: 11px; color: var(--text2); width: 90px; flex-shrink: 0; }
+.mbar-track { flex: 1; height: 3px; background: var(--bg3); border-radius: 100px; overflow: hidden; }
+.mbar-fill { height: 100%; border-radius: 100px; background: var(--gold); transition: width 0.9s ease; }
+.mbar-fill.back { background: var(--blue); }
+.mbar-fill.arms { background: var(--rose); }
+.mbar-fill.legs { background: var(--green); }
+.mbar-fill.core { background: var(--orange); }
+.mbar-count { font-size: 10px; color: var(--text3); width: 44px; text-align: right; flex-shrink: 0; }
+.recent-list { display: flex; flex-direction: column; gap: 8px; }
+.recent-item {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 13px 15px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.recent-day { font-size: 13px; color: var(--text); margin-bottom: 2px; }
+.recent-date { font-size: 10px; color: var(--text3); }
+.recent-check {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--green-bg); border: 1px solid var(--green);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--green); font-size: 12px; flex-shrink: 0;
+}
+.empty-state { text-align: center; padding: 36px 20px; color: var(--text3); }
+.empty-icon { font-size: 28px; margin-bottom: 10px; }
+.empty-txt { font-size: 12px; line-height: 1.7; }
+.insight-card {
+  background: var(--bg3); border-radius: var(--radius); padding: 14px 16px;
+  margin-bottom: 18px; border-left: 3px solid var(--gold);
+}
+.insight-lbl { font-size: 9px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+.insight-txt {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 15px; font-weight: 300; letter-spacing: 0.2px; color: var(--text2); line-height: 1.7;
+}
+
+/* ── CALENDAR ── */
+.cal-content { padding: 16px 16px 100px; }
+.cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.cal-month-lbl { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
+.cal-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text2); cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--gold); color: var(--gold); }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-bottom: 22px; }
+.cal-dow { text-align: center; font-size: 9px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; padding: 6px 0; }
+.cal-day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm); font-size: 12px; color: var(--text2);
+  cursor: pointer; position: relative; transition: all 0.15s;
+  border: 1px solid transparent;
+}
+.cal-day:hover { background: var(--bg3); }
+.cal-day.empty { cursor: default; }
+.cal-day.today { border-color: var(--gold); color: var(--gold); font-weight: 600; }
+.cal-day.done { background: rgba(122,170,138,0.12); color: var(--green); }
+.cal-day.done::after {
+  content: ''; position: absolute; bottom: 3px; left: 50%;
+  transform: translateX(-50%); width: 3px; height: 3px;
+  border-radius: 50%; background: var(--green);
+}
+.log-item {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px;
+}
+.log-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.log-title { font-size: 13px; color: var(--text); }
+.log-date { font-size: 10px; color: var(--text3); }
+
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 100px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="header-row">
+    <div>
+      <div class="logo">Sculpt</div>
+      <div class="logo-sub">your program</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchView('workout')" id="tab-workout">Workout</button>
+    <button class="nav-tab" onclick="switchView('dashboard')" id="tab-dashboard">Dashboard</button>
+    <button class="nav-tab" onclick="switchView('calendar')" id="tab-calendar">Calendar</button>
+  </div>
+</div>
+
+<!-- WORKOUT VIEW -->
+<div class="view active" id="view-workout">
+  <div class="day-selector" id="day-pills"></div>
+  <div class="day-content" id="day-content"></div>
+</div>
+
+<!-- DASHBOARD VIEW -->
+<div class="view" id="view-dashboard">
+  <div class="dash-content">
+    <div class="dash-hero">
+      <div class="dash-greeting" id="dash-greeting">Good morning,<br><em>let's build.</em></div>
+      <div class="dash-date" id="dash-date"></div>
+    </div>
+    <div class="streak-card">
+      <div class="streak-flame">🔥</div>
+      <div>
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-lbl">day streak</div>
+      </div>
+      <div style="margin-left:auto;text-align:right;">
+        <div style="font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;">Total</div>
+        <div style="font-family:'Inter Tight',sans-serif;font-size:28px;font-weight:300;color:var(--text2);" id="total-wk">0</div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-val" id="sw">0</div><div class="stat-lbl">This Week</div><div class="stat-sub">workouts done</div></div>
+      <div class="stat-card"><div class="stat-val" id="sm">0</div><div class="stat-lbl">This Month</div><div class="stat-sub">workouts done</div></div>
+      <div class="stat-card"><div class="stat-val">5</div><div class="stat-lbl">Weekly Goal</div><div class="stat-sub">days per week</div></div>
+      <div class="stat-card"><div class="stat-val" id="spct">0%</div><div class="stat-lbl">Goal Rate</div><div class="stat-sub">last 4 weeks</div></div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-lbl">Your program philosophy</div>
+      <div class="insight-txt">"Glute volume × stretched-position loading × progressive overload — in the right order. That's the formula."</div>
+    </div>
+    <div class="section-head">Weekly muscle volume</div>
+    <div class="muscle-bars">
+      <div class="mbar-row"><div class="mbar-lbl">Glutes</div><div class="mbar-track"><div class="mbar-fill" style="width:88%"></div></div><div class="mbar-count">~18 sets</div></div>
+      <div class="mbar-row"><div class="mbar-lbl">Hamstrings</div><div class="mbar-track"><div class="mbar-fill legs" style="width:70%"></div></div><div class="mbar-count">~14 sets</div></div>
+      <div class="mbar-row"><div class="mbar-lbl">Back</div><div class="mbar-track"><div class="mbar-fill back" style="width:75%"></div></div><div class="mbar-count">~15 sets</div></div>
+      <div class="mbar-row"><div class="mbar-lbl">Arms</div><div class="mbar-track"><div class="mbar-fill arms" style="width:55%"></div></div><div class="mbar-count">~11 sets</div></div>
+      <div class="mbar-row"><div class="mbar-lbl">Core</div><div class="mbar-track"><div class="mbar-fill core" style="width:40%"></div></div><div class="mbar-count">~8 sets</div></div>
+    </div>
+    <div class="section-head">Recent workouts</div>
+    <div id="recent-list" class="recent-list">
+      <div class="empty-state"><div class="empty-icon">🌙</div><div class="empty-txt">No workouts logged yet.<br>Complete your first day to start tracking.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CALENDAR VIEW -->
+<div class="view" id="view-calendar">
+  <div class="cal-content">
+    <div class="cal-nav">
+      <button class="cal-btn" onclick="calNav(-1)">‹</button>
+      <div class="cal-month-lbl" id="cal-lbl"></div>
+      <button class="cal-btn" onclick="calNav(1)">›</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="section-head">Workout log</div>
+    <div id="log-list"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalBg(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Add Exercise</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="mtab-write" onclick="switchMTab('write')">Write New</button>
+      <button class="modal-tab" id="mtab-copy" onclick="switchMTab('copy')">Copy from Plan</button>
+    </div>
+    <div class="modal-body">
+      <div id="mpanel-write">
+        <div class="form-group"><label class="form-lbl">Exercise Name</label><input class="form-inp" id="fn" placeholder="e.g. Cable Kickback"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-lbl">Sets</label><input class="form-inp" id="fs" type="number" placeholder="3" min="1" max="10"></div>
+          <div class="form-group"><label class="form-lbl">Reps</label><input class="form-inp" id="fr" placeholder="10–12"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-lbl">Weight</label><input class="form-inp" id="fw" placeholder="lbs / kg"></div>
+          <div class="form-group"><label class="form-lbl">Rest</label><input class="form-inp" id="frt" placeholder="60s"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-lbl">Floor</label><select class="form-sel" id="ff"><option value="top">Top Floor</option><option value="bottom">Bottom Floor</option></select></div>
+          <div class="form-group"><label class="form-lbl">Muscle Group</label><input class="form-inp" id="fm" placeholder="Glutes, Arms..."></div>
+        </div>
+        <div class="form-group"><label class="form-lbl">Tip (optional)</label><textarea class="form-ta" id="fti" placeholder="One thing most people miss..."></textarea></div>
+        <div class="form-group"><label class="form-lbl">If machine is taken</label><input class="form-inp" id="fa" placeholder="Alternative exercise"></div>
+        <button class="modal-submit" onclick="addCustomEx()">Add to Today's Workout</button>
+      </div>
+      <div id="mpanel-copy" style="display:none">
+        <div class="copy-filters">
+          <select class="copy-filter-sel" id="cf-day" onchange="renderCopyList()"><option value="">All Days</option></select>
+        </div>
+        <div id="copy-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════
+// PROGRAM DATA
+// ═══════════════════════════════
+const DAYS = [
+  {
+    id: 0,
+    label: "Day 1",
+    name: "Glutes & Hamstrings",
+    subtitle: "Glute Focus · Volume Day",
+    why: `<strong>Why this day exists</strong>
+<p>Your glutes are the largest muscle in your body. They need high frequency and high volume to grow. This day hits them through every movement pattern — hip extension, hip hinge, single-leg, abduction, and isolation — in the order that science says gets the most out of each.</p>
+<strong>Why this exact order</strong>
+<p>Hip thrusts go first because glutes are fresh and you can load heavy. The RDL follows while your posterior chain still has gas. The leg curl comes third — before your hamstrings get too fatigued from the hinges — using knee flexion to hit the hamstrings through their second function. Split squats and abductor machine come mid-session, and cable kickbacks finish you off as a pure isolation finisher when heavy loading is done.</p>
+<strong>The abductor machine note</strong>
+<p>You do 4×16 (8 upright + 8 leaned) — that's actually research-backed. Upright targets glute medius, leaning forward 10–15° shifts tension away from hip flexors onto the glutes. The machine has been shown in EMG studies to preferentially activate glute med over TFL more than any other exercise.</p>`,
+    stretches: [
+      { name: "90/90 Hip Stretch", detail: "60s each side — opens the hip capsule, primes the hip hinge pattern for everything that follows" },
+      { name: "Pigeon Pose", detail: "45s each side — deep glute max stretch, directly prepares the muscle you're about to load" },
+      { name: "Hip Flexor Lunge Stretch", detail: "30s each side — critical: tight hip flexors prevent glutes from fully activating. Stretch these first." },
+      { name: "Cat-Cow", detail: "10 slow reps — mobilizes the lumbar spine before you load it with hip thrusts and RDLs" },
+      { name: "Bodyweight Glute Bridge", detail: "15 slow reps — activates (not fatigues) the glutes and builds the mind-muscle connection before loading" },
+    ],
+    exercises: [
+      {
+        floor: "top",
+        name: "Hip Thrust Machine",
+        primary: ["Glutes"],
+        secondary: ["Hamstrings"],
+        sets: 4, reps: "8–10", rest: "90s",
+        tip: "At the top, squeeze for a full 1-second hold every rep — this isometric contraction is where the most growth signal comes from. Position the pad just below your hip bones, not on your waist. Drive through your heels, not your toes.",
+        alt: "Barbell hip thrust with bench",
+        why: "Goes first because this is your highest-output glute exercise and you want to be completely fresh for it. Hip thrusts activate the gluteus maximus up to 50% more than squats or deadlifts. Four sets because glutes are a large muscle that recovers quickly between sets and benefits from high volume."
+      },
+      {
+        floor: "top",
+        name: "Romanian Deadlift",
+        primary: ["Hamstrings", "Glutes"],
+        secondary: ["Erectors"],
+        sets: 3, reps: "8–10", rest: "90s",
+        tip: "This is a hip hinge, not a squat. Push your hips BACK behind you — feel the hamstring stretch at the bottom before driving forward. Lower slowly (3 seconds down). The stretch at the bottom is where hypertrophy happens most.",
+        alt: "Dumbbell RDL",
+        why: "Comes second because it's a heavy compound that needs you to be strong but not destroyed. It works the hamstrings through hip extension — the same movement as the hip thrust but with a long-muscle stretch. Pairing a hip extension (hip thrust) with a knee flexion (leg curl later) is the research-recommended way to hit the hamstrings completely."
+      },
+      {
+        floor: "top",
+        name: "Lying Leg Curl",
+        primary: ["Hamstrings"],
+        secondary: ["Calves"],
+        sets: 3, reps: "10–12", rest: "60s",
+        tip: "Point your toes slightly outward to emphasize the biceps femoris (outer hamstring head). Don't cheat the range — your hamstrings are strong enough to curl further than most people allow. Slow the negative (3 seconds).",
+        alt: "Seated leg curl",
+        why: "Placed HERE — third — intentionally. Your hamstrings work in two ways: hip extension (the RDL does that) and knee flexion (this does that). If you wait until the end of the session to do leg curls, your hamstrings are already pre-fatigued from RDLs and split squats and you won't get quality reps. Doing it third, while the hamstrings are still relatively recovered, gives you full stimulus."
+      },
+      {
+        floor: "top",
+        name: "Bulgarian Split Squat",
+        primary: ["Glutes"],
+        secondary: ["Quads", "Hamstrings"],
+        sets: 3, reps: "8–10 each", rest: "90s",
+        tip: "Lean your torso slightly forward as you lower — this is the glute-biased version. Front foot far enough forward that your shin stays vertical. Pause 1 second at the bottom for a glute stretch. This is one of the best exercises for glute growth because of the deep loaded stretch.",
+        alt: "Reverse lunge with DBs",
+        why: "A single-leg exercise is essential on glute day because it forces each glute to work independently, correcting imbalances. Research shows the stretched position at the bottom of a split squat is excellent for hypertrophy. It comes after the heavy bilateral work (hip thrust, RDL) so it doesn't fatigue you before your heaviest sets."
+      },
+      {
+        floor: "top",
+        name: "Abductor Machine",
+        primary: ["Glute Med", "Glute Min"],
+        secondary: ["TFL"],
+        sets: 4, reps: "16 (8 upright + 8 leaned)", rest: "60s",
+        tip: "Your protocol is science-backed. Upright = glute medius dominant. Leaning forward 10–15° = shifts tension further onto glute med and away from hip flexors. Pause 1 second at full abduction. Resist the close slowly — the eccentric is where most muscle growth happens.",
+        alt: "Side-lying hip abduction with band",
+        why: "The abductor machine is placed mid-session (not first) so your glute med has been pre-warmed by the split squats. Research shows the machine preferentially activates glute medius over TFL more than any other exercise — including free weights. Your 4×16 protocol with the position variation is optimal. Glute med is the muscle responsible for the rounder, wider shape of the glutes when viewed from behind."
+      },
+      {
+        floor: "top",
+        name: "Cable Kickback",
+        primary: ["Glutes"],
+        secondary: [],
+        sets: 3, reps: "15 each", rest: "60s",
+        tip: "Hinge forward 45° and kick STRAIGHT back — this targets glute max (not glute med, which your abductor machine already handled). Keep a slight bend in the knee. Hold 1 second at peak contraction. Use the cable because it provides constant tension even at the top — dumbbells and bands lose it. Don't use a crossover stance here — that targets glute med again, which you've already done.",
+        alt: "Resistance band kickback",
+        why: "The finisher. After all the heavy compound work, your glutes are pumped and full of blood — cable kickbacks let you isolate and squeeze the glute max at end-range with constant tension. Research confirms isolation exercises at the end of a session, when muscles are pre-fatigued, produce a significant hypertrophy signal. Straight back kick = glute max. You're doing abductor machine for glute med, so kickbacks should be straight-back only."
+      },
+    ]
+  },
+  {
+    id: 1,
+    label: "Day 2",
+    name: "Back — Erectors & Definition",
+    subtitle: "Back Focus · Spine Line Day",
+    why: `<strong>The goal: the spine line, not width</strong>
+<p>There are two very different backs you can build. Wide-grip pulldowns and flared-elbow rows build lat width. That's not your goal. Your goal is the deep vertical groove down the center — that requires building the erector spinae, mid traps, and rhomboids, which run parallel to and on either side of the spine.</p>
+<strong>Why this order</strong>
+<p>Deadlifts go first because they're the single best erector builder and require maximum focus and strength. Rows come second — horizontal pulling hits the mid-traps and rhomboids directly. Lat pulldown with close grip comes after so you get lat depth without width. Good mornings and back extensions are the most direct erector spine exercises and come when you're warm but not destroyed. Rear delts and rotary torso finish the session.</p>
+<strong>The anti-width principle</strong>
+<p>Close/neutral grip throughout. Elbows pulled toward the hips, not flared. This targets the lower lats (depth) rather than upper lats (width). You want your back to look sculpted and feminine, not broad.</p>`,
+    stretches: [
+      { name: "Child's Pose", detail: "60s — full spine decompression before loading it. Non-negotiable before deadlifts." },
+      { name: "Cat-Cow", detail: "10 slow reps — warms the lumbar and thoracic spine through its full range" },
+      { name: "Prone Cobra Hold", detail: "30s — activates the erector spinae and rear delts before you need them. Hold and breathe." },
+      { name: "Band Pull-Apart", detail: "15 reps with a light resistance band — activates rhomboids and rear delts directly before rowing" },
+      { name: "Hip Hinge with Dowel/Bar", detail: "10 reps bodyweight — grooves the hip hinge pattern before you load it with a barbell" },
+    ],
+    exercises: [
+      {
+        floor: "top",
+        name: "Barbell Deadlift",
+        primary: ["Erectors"],
+        secondary: ["Hamstrings", "Glutes", "Traps", "Lats"],
+        sets: 3, reps: "5–6", rest: "120s",
+        tip: "Before you pull: lats tight (imagine protecting your armpits), big breath in, brace 360° around your core. Drag the bar up your shins. Drive the floor away — think 'leg press' not 'pull.' This builds the entire posterior chain from neck to glutes in one lift.",
+        alt: "DB deadlift or trap bar deadlift",
+        why: "Goes first because it requires the most neural output and spinal loading — you need to be fresh. The deadlift is the single best exercise for building the erector spinae, which are the two columns of muscle flanking your spine. Developing these creates the deep center groove you want. Research confirms deadlifts emphasize the lower erectors most but the upper erectors also get significant stimulus."
+      },
+      {
+        floor: "top",
+        name: "Chest-Stabilized Mid Row",
+        primary: ["Mid Traps", "Rhomboids"],
+        secondary: ["Rear Delts"],
+        sets: 3, reps: "10–12", rest: "75s",
+        tip: "This is your back-line exercise. Drive your elbows back past your torso and hold the peak squeeze for 1 full second. The chest pad removes any body swing — your mid-back does all the work. Think 'elbows into back pockets.' These muscles sit directly on either side of the spine.",
+        alt: "Seated cable row, neutral grip",
+        why: "The mid traps and rhomboids sit horizontally across the back, between the shoulder blades and spine. Training them creates the horizontal definition lines and contributes to the center groove. The chest-stabilized position eliminates momentum — every rep is clean muscle work."
+      },
+      {
+        floor: "top",
+        name: "Lat Pulldown (Close/Neutral Grip)",
+        primary: ["Lats — Lower"],
+        secondary: ["Teres Major", "Biceps"],
+        sets: 3, reps: "10–12", rest: "75s",
+        tip: "Close neutral grip pulls your elbows toward your hips — this hits lower lats which create depth without adding width. Think 'elbows to hip pockets' not 'bar to chest.' Full arm extension at the top is essential — that stretch is where most of the hypertrophy signal comes from.",
+        alt: "Single-arm cable pulldown",
+        why: "Close grip is intentional — wide grip builds lat width, close/neutral grip builds lat depth. You want the V-taper illusion without broad shoulders. This exercise also provides a vertical pull pattern to balance the horizontal rows."
+      },
+      {
+        floor: "top",
+        name: "Good Mornings",
+        primary: ["Erectors", "Hamstrings"],
+        secondary: ["Glutes"],
+        sets: 3, reps: "10–12", rest: "75s",
+        tip: "Hinge from the hip with a slight knee bend — you should feel a hamstring stretch at the bottom, not lower back compression. Drive your hips forward to return. This builds the spinal erectors through their full range of motion. Heavier than you think, but perfect form always.",
+        alt: "Back extension machine",
+        why: "Good mornings build the erectors through a loaded hip hinge — they're one of the most direct erector-spine builders alongside deadlifts and back extensions. Having two erector exercises in this session (deadlift + good morning) is deliberate: the deadlift hits them under maximum load, the good morning hits them through a fuller, more isolated range."
+      },
+      {
+        floor: "bottom",
+        name: "Back Extension",
+        primary: ["Erectors"],
+        secondary: ["Glutes", "Hamstrings"],
+        sets: 3, reps: "12–15", rest: "60s",
+        tip: "Hold a 2-second contraction at the top of every rep — this isometric peak squeeze is what builds the erectors most effectively. Round forward at the bottom for a full stretch, come to neutral spine at the top (not hyperextension). Add a light plate at your chest once bodyweight feels easy.",
+        alt: "Superman hold on floor",
+        why: "The most direct erector isolation exercise in the gym. After the heavy hip hinges (deadlift, good mornings), this finishes the erectors with higher-rep controlled work. The combination of heavy compound + higher-rep isolation is the research-recommended approach for building a specific muscle group."
+      },
+      {
+        floor: "top",
+        name: "Reverse Pec Dec (Rear Delt)",
+        primary: ["Rear Delts"],
+        secondary: ["Mid Traps", "Rhomboids"],
+        sets: 3, reps: "12–15", rest: "60s",
+        tip: "Lead with your elbows, not your hands. Go lighter than you think — rear delts are small and precise. Slow the eccentric (3 seconds in). Well-developed rear delts create the 3D rounded look of the upper back without adding any width.",
+        alt: "Bent-over DB rear delt fly",
+        why: "Rear delts are the most neglected back muscle and also one of the most visible when developed. They create the spherical, defined look to the upper back when viewed from behind or the side. This exercise goes at the end because it's isolation — no point putting it before the big compound lifts."
+      },
+      {
+        floor: "top",
+        name: "Rotary Torso Machine",
+        primary: ["Obliques"],
+        secondary: ["Core"],
+        sets: 3, reps: "15 each side", rest: "45s",
+        tip: "Slow and controlled rotation, pause at end range. Breathe out as you rotate. Obliques define the sides of your waist — training them with resistance creates definition without adding width, and makes your waist appear cinched.",
+        alt: "Cable woodchop",
+        why: "Your obliques are part of your back aesthetic — they're visible from behind when you're in a backless dress. Training them with resistance builds definition without adding waist circumference."
+      },
+    ]
+  },
+  {
+    id: 2,
+    label: "Day 3",
+    name: "Arms & Shoulders",
+    subtitle: "Arms Focus · Cable Day",
+    why: `<strong>The goal: defined, not wide</strong>
+<p>For arms, the priority is triceps — they make up two-thirds of upper arm size. Developing them is what removes the soft, undefined look at the back of the arm. For biceps, the goal is the long-head peak and visible separation between muscle groups.</p>
+<strong>Why cable-heavy</strong>
+<p>Cables provide constant tension throughout the entire range of motion, which free weights can't match — at certain angles, gravity removes the load from a dumbbell. Cable machines maintain tension even at the weakest point, which means more total muscle stimulus per rep. They're also easier to control, which allows better mind-muscle connection.</p>
+<strong>Why shoulders are here</strong>
+<p>Well-developed shoulders — specifically the side and rear delts — make your waist look smaller by widening the frame above it. The Arnold press works all three delt heads in one movement. Side delts give you the shoulder 'cap' that makes the hourglass shape.</p>`,
+    stretches: [
+      { name: "Overhead Tricep Stretch", detail: "30s each side — grab your elbow overhead and gently pull. Stretches the long head directly before loading it." },
+      { name: "Cross-body Bicep Stretch", detail: "30s each side — arm straight across the chest, gentle hold. Stretches the bicep before curls." },
+      { name: "Doorframe Chest Opener", detail: "30s — arms at 90° in a doorframe, lean forward. Opens the chest and front shoulder before pressing." },
+      { name: "Wrist Circles", detail: "10 each direction — warm the wrists before gripping cables and dumbbells" },
+      { name: "Band Pull-Apart", detail: "15 reps — activates rear delts and primes the shoulder for pressing movements" },
+    ],
+    exercises: [
+      {
+        floor: "top",
+        name: "Arnold Press",
+        primary: ["All Delt Heads"],
+        secondary: ["Triceps"],
+        sets: 3, reps: "8–10", rest: "75s",
+        tip: "Start with palms facing you, rotate outward as you press. Control the descent in 3 seconds — slow eccentric on shoulders prevents injury and maximizes stimulus. The rotation is what makes this special — it trains all three heads of the delt in a single rep.",
+        alt: "Shoulder press machine",
+        why: "Goes first while shoulders are fresh — this is your heaviest overhead movement. All three delt heads trained in one exercise. Defined shoulders make the waist look smaller by widening the frame above it. This is a key part of the wedding-day aesthetic you're building toward."
+      },
+      {
+        floor: "top",
+        name: "Cable Overhead Tricep Extension",
+        primary: ["Triceps — Long Head"],
+        secondary: ["Triceps — All Heads"],
+        sets: 3, reps: "10–12", rest: "60s",
+        tip: "Arms overhead stretches the long head of the tricep before the extension begins — this is the stretched-position load that drives maximum hypertrophy. All three tricep heads are engaged. Keep your elbows close to your head and don't flare them out.",
+        alt: "Overhead DB tricep extension",
+        why: "Triceps are 2/3 of your upper arm. The long head is the largest and the one responsible for most of the arm's defined shape. Overhead extensions are the best cable exercise for the long head because they load it from a stretched position — research shows stretched-position loading produces the most hypertrophy signal."
+      },
+      {
+        floor: "top",
+        name: "Seated Incline Dumbbell Curl",
+        primary: ["Biceps — Long Head"],
+        secondary: ["Brachialis"],
+        sets: 3, reps: "10–12", rest: "60s",
+        tip: "The incline position hangs your arm behind your body — this stretches the long head of the bicep before you even start curling. This is one of the best bicep exercises because of that stretch load. Supinate fully at the top — turn your palm all the way up and pinky toward the ceiling.",
+        alt: "Cable curl from low pulley",
+        why: "Incline curls provide a stretched-position load on the bicep long head — the same principle as overhead tricep extensions. The arm hangs behind the torso, pre-stretching the muscle before contraction. Research consistently shows stretched-position loading is the most powerful stimulus for hypertrophy."
+      },
+      {
+        floor: "top",
+        name: "Cable Tricep Rope Pushdown",
+        primary: ["Triceps — Lateral Head"],
+        secondary: ["Triceps — Medial Head"],
+        sets: 3, reps: "12–15", rest: "60s",
+        tip: "Split the rope at the bottom and pull slightly outward — this full separation stretches the lateral head at end range. Elbows pinned to your sides throughout. Constant cable tension means the muscle is loaded even at the top where a dumbbell would go slack.",
+        alt: "Tricep press machine",
+        why: "Pushdowns target the lateral head of the tricep — the outermost part of the arm that's visible from the front. The rope allows the wrists to rotate naturally at the bottom, giving you a fuller contraction. After the overhead extension (long head), this covers the lateral head — together they train the full tricep."
+      },
+      {
+        floor: "top",
+        name: "Cable Hammer Curl (Rope)",
+        primary: ["Brachialis"],
+        secondary: ["Biceps", "Brachioradialis"],
+        sets: 3, reps: "10–12", rest: "60s",
+        tip: "Neutral grip (palms facing each other) throughout. The brachialis sits under the bicep and literally pushes it up — developing it makes your bicep look taller and more defined. Constant cable tension through the full curl. Keep elbows fixed.",
+        alt: "Cross-body hammer curl with DB",
+        why: "The brachialis is the underrated arm muscle. It sits between the bicep and tricep, and when developed, creates visible separation between the muscle groups — that 'sculpted arm' look. Rope hammer curls train it perfectly with constant cable tension."
+      },
+      {
+        floor: "top",
+        name: "Cable Lateral Raise",
+        primary: ["Side Delts"],
+        secondary: [],
+        sets: 3, reps: "15–20", rest: "60s",
+        tip: "Cable from the low pulley, arm across your body. Lead with your pinky slightly higher than your thumb — this external rotation hits the middle delt and creates the shoulder 'cap.' Go lighter than you think. Cable maintains tension at the bottom where DBs go slack.",
+        alt: "DB lateral raise",
+        why: "Side delt development creates the visual width at the shoulder that makes the waist look narrower — the hourglass effect. Cables provide constant tension even at the bottom of the movement, unlike dumbbells which lose all tension when your arm is down. Higher reps (15–20) are research-backed for delt hypertrophy specifically."
+      },
+      {
+        floor: "top",
+        name: "Preacher Curl Machine",
+        primary: ["Biceps — Peak"],
+        secondary: ["Brachialis"],
+        sets: 3, reps: "10–12", rest: "60s",
+        tip: "Full extension at the bottom, full squeeze at the top. The pad holds your upper arm in place — you literally cannot cheat. Slow the eccentric (3 seconds down). This is your pure bicep peak builder — the research shows 3x/week preacher curls produce measurable bicep thickness increases.",
+        alt: "EZ bar preacher curl",
+        why: "Finisher for the biceps. By this point in the session, your biceps are pre-fatigued from incline curls and hammer curls — the preacher machine cleans up with pure isolation. The supported arm eliminates all cheating. This is what puts the peak on a bicep."
+      },
+    ]
+  },
+  {
+    id: 3,
+    label: "Day 4",
+    name: "Glutes & Legs",
+    subtitle: "Glute Focus · Volume Day 2",
+    why: `<strong>Why a second glute day</strong>
+<p>Glutes are the largest muscle in the body and need 2–3 sessions per week to grow optimally. Research supports twice-weekly training for glute hypertrophy — any less and you're leaving growth on the table. This second session uses slightly different exercises than Day 1 to hit the glutes from different angles while allowing partial recovery.</p>
+<strong>What's different from Day 1</strong>
+<p>Day 1 is hip thrust and RDL dominant. Day 4 introduces barbell hip thrust (free weight version for progressive overload), leg press for a different stimulus, and more leg volume. The abductor machine appears again because glute med needs twice-weekly training for the rounded shape you want.</p>`,
+    stretches: [
+      { name: "90/90 Hip Stretch", detail: "60s each side — opens the hip for everything that follows. Same as Day 1." },
+      { name: "Pigeon Pose", detail: "45s each side — glute max stretch before heavy loading" },
+      { name: "Quad Stretch Standing", detail: "30s each side — warms the quads before split squats and leg press" },
+      { name: "Calf Stretch (Wall)", detail: "30s each side — prepares the calves before calf press" },
+      { name: "Glute Bridge Activation", detail: "15 reps slow — same as Day 1, builds mind-muscle connection before loading" },
+    ],
+    exercises: [
+      {
+        floor: "top",
+        name: "Barbell Hip Thrust",
+        primary: ["Glutes"],
+        secondary: ["Hamstrings"],
+        sets: 4, reps: "8–12", rest: "90s",
+        tip: "Bench at mid-shoulder blade. Bar padded, positioned across hip crease. Posterior pelvic tilt at the top — tuck your pelvis under, don't just lift your hips. This pelvic tuck fully contracts the glute max. Squeeze for 1 second. Drive through heels.",
+        alt: "Hip thrust machine",
+        why: "Your second hip thrust of the week, this time with a barbell for progressive overload variety. The barbell allows you to load heavier and feel the weight shift differently than the machine. Your goal should be to add a small amount of weight to this compared to what felt comfortable on Day 1."
+      },
+      {
+        floor: "top",
+        name: "Leg Press (Feet High & Wide)",
+        primary: ["Glutes", "Hamstrings"],
+        secondary: ["Quads"],
+        sets: 3, reps: "10–12", rest: "75s",
+        tip: "Feet pressed toward the top corners of the platform. Lower all the way until your glutes just lift slightly from the pad — that's your full range. Don't lock out at the top. High foot placement shifts the load from quads to glutes and hamstrings.",
+        alt: "Goblet squat",
+        why: "The leg press with high feet is essentially a hip-dominant press — it loads the glutes and hamstrings differently than a hip thrust because your knees flex deeply, providing a stretched position for the glutes. Different tools, same muscles, different stimulus = more complete development."
+      },
+      {
+        floor: "top",
+        name: "Romanian Deadlift (DBs)",
+        primary: ["Hamstrings", "Glutes"],
+        secondary: ["Erectors"],
+        sets: 3, reps: "10–12", rest: "75s",
+        tip: "Dumbbell version this week — the DBs allow the hands to travel close to your legs and slightly inward, which can increase glute activation for some people vs. the barbell. Same hip hinge mechanics: push hips back, feel the hamstring stretch, drive forward.",
+        alt: "Single-leg DB RDL",
+        why: "A second RDL exposure this week — consistent hip hinge training is how hamstrings grow. Using dumbbells instead of a barbell provides a slightly different stimulus and allows more natural wrist position. Hamstrings require multiple sets per week to grow."
+      },
+      {
+        floor: "top",
+        name: "Abductor Machine",
+        primary: ["Glute Med", "Glute Min"],
+        secondary: [],
+        sets: 4, reps: "16 (8 upright + 8 leaned)", rest: "60s",
+        tip: "Second abductor session this week — glute medius needs twice-weekly training for the round side-glute shape. Same protocol: 8 upright, 8 leaned forward 10–15°. You should be able to use slightly more resistance than Day 1 as your glute med warms up faster.",
+        alt: "Side-lying hip abduction with band",
+        why: "Glute medius responds well to high-frequency training. Two abductor sessions per week is the research-backed approach for building the lateral glute shape. Glute med is the muscle responsible for the rounded, wider appearance when viewed from behind — it's distinct from glute max."
+      },
+      {
+        floor: "top",
+        name: "Leg Extension",
+        primary: ["Quads"],
+        secondary: [],
+        sets: 3, reps: "12–15", rest: "60s",
+        tip: "Slow the negative to 3 seconds — the eccentric phase of leg extensions is where quad hypertrophy happens most. Lean the seat back slightly for more stretch at the bottom. Quads and hamstrings oppose each other — training quads prevents knee imbalances.",
+        alt: "Wall sit (isometric)",
+        why: "Quad training prevents the knee imbalances that can develop when you train hamstrings and glutes heavily without balancing the front of the leg. Balanced leg development also looks better aesthetically — quad definition gives the legs shape from the front."
+      },
+      {
+        floor: "top",
+        name: "Calf Press Machine",
+        primary: ["Calves"],
+        secondary: [],
+        sets: 3, reps: "15–20", rest: "45s",
+        tip: "Full range of motion is everything for calves — dead stretch at the bottom, up on tiptoe at the top. 15 perfect reps beats 20 partial reps. Calves have a high ratio of slow-twitch fibers and respond best to volume and full range.",
+        alt: "Standing calf raises",
+        why: "Calves complete the leg aesthetic — developed calves are visible in heels and backless shoes. They respond specifically to full range of motion and higher reps. Easy to do, easy to neglect — keeping them in the program ensures you're building the complete picture."
+      },
+      {
+        floor: "bottom",
+        name: "Roman Chair Leg Raise",
+        primary: ["Lower Abs"],
+        secondary: ["Hip Flexors"],
+        sets: 3, reps: "12–15", rest: "60s",
+        tip: "Tilt your pelvis posteriorly at the top — curl your lower back slightly forward as your legs come up. This engages the abs over the hip flexors. This movement targets the lower abdominal region specifically, which is the area that tends to store fat last and lose it last.",
+        alt: "Hanging knee raise",
+        why: "Core work at the end when your body is already fatigued means the abs have to work harder. Lower abs specifically are activated by leg raises — this exercise is one of the few that genuinely loads the lower abdominal region."
+      },
+    ]
+  },
+  {
+    id: 4,
+    label: "Day 5",
+    name: "Back & Core",
+    subtitle: "Back Focus · Thickness Day",
+    why: `<strong>Your second back session</strong>
+<p>The first back session (Day 2) focused on erectors and the spine line with deadlifts, good mornings, and back extensions. This session focuses on back thickness — the horizontal rows that build the density and depth you see when someone's back catches light at a different angle. Together, the two sessions give you complete back development.</p>
+<strong>Why core is on this day</strong>
+<p>Core and back are deeply connected — they work together on every row and pull. Training them together means your core is already engaged and warm from the back work. Core training at the end of the session (when everything is pre-fatigued) also means your abs have to work harder for the same output, which drives more adaptation.</p>`,
+    stretches: [
+      { name: "Child's Pose", detail: "60s — same as Day 2, decompresses the spine before loading it" },
+      { name: "Thoracic Rotation Stretch", detail: "10 each side — sit cross-legged, rotate your torso and hold 3s. Warms the mid-back for rows." },
+      { name: "Lat Stretch (Overhead)", detail: "30s each side — reach one arm overhead and lean sideways. Stretches the lat before pulldowns." },
+      { name: "Band Pull-Apart", detail: "15 reps — activates rhomboids and rear delts before heavy rowing" },
+      { name: "Cat-Cow", detail: "10 reps — finalizes the spinal warm-up before any loaded movement" },
+    ],
+    exercises: [
+      {
+        floor: "top",
+        name: "T-Bar Row",
+        primary: ["Mid Traps", "Rhomboids"],
+        secondary: ["Lats", "Rear Delts"],
+        sets: 3, reps: "8–10", rest: "90s",
+        tip: "Chest on the pad, neutral grip handles. Drive elbows back past your torso and hold the squeeze for 1 second. Full stretch at the bottom — arms nearly straight. T-bar rows build the horizontal thickness of the back, which is what creates the 'wings' appearance when your back flexes.",
+        alt: "Bent-over barbell row",
+        why: "Goes first because it's your heaviest row and requires the most back strength. T-bar rows with a narrow grip specifically target the mid and lower traps — the muscles that run parallel to your spine and create that center line definition."
+      },
+      {
+        floor: "top",
+        name: "Alternating Mid Row (Cable)",
+        primary: ["Mid Back"],
+        secondary: ["Lats", "Obliques"],
+        sets: 3, reps: "10–12 each", rest: "75s",
+        tip: "Rotating slightly as you pull works the erector spinae unilaterally — that's the muscle that creates the groove down the spine. Keep your hips mostly stable and let the rotation come from the torso. Full stretch on every rep.",
+        alt: "Single-arm dumbbell row",
+        why: "The unilateral (one side at a time) nature of this exercise creates a small trunk rotation as you pull — this trains the erectors asymmetrically and helps build the rotational strength of the back. It also identifies and corrects any left-right strength imbalances."
+      },
+      {
+        floor: "top",
+        name: "Wide Grip Pull-Up (Weighted if possible)",
+        primary: ["Lats"],
+        secondary: ["Biceps", "Rhomboids"],
+        sets: 3, reps: "5–8", rest: "90s",
+        tip: "Dead hang at the bottom — full arm extension is essential for the lat stretch. Think 'pull your elbows down to your hips' not 'pull the bar to your chest.' This cue activates lats 20–30% more effectively. If adding weight, use a dumbbell between your feet or a belt.",
+        alt: "Lat pulldown wide grip",
+        why: "Wide grip pull-ups on this day (not Day 2) because Day 2 used close/neutral grip. Together they give you lat development across the full width. Bodyweight movements like pull-ups also train stabilizer muscles that machines miss — they create a more 'natural' looking back development."
+      },
+      {
+        floor: "bottom",
+        name: "Back Extension",
+        primary: ["Erectors"],
+        secondary: ["Glutes", "Hamstrings"],
+        sets: 3, reps: "12–15", rest: "60s",
+        tip: "Second back extension of the week. Hold a light plate at your chest today for added resistance. 2-second hold at the top. Your erectors should feel this more easily now that they've been warmed up by the rows above.",
+        alt: "Superman hold on floor",
+        why: "Your second back extension exposure this week — erectors benefit from training frequency just like glutes do. This time it comes after the rows, which have already activated the back thoroughly. The combination means you're extending well and the erectors are truly working."
+      },
+      {
+        floor: "bottom",
+        name: "Plank",
+        primary: ["Core", "Erectors"],
+        secondary: ["Shoulders"],
+        sets: 3, reps: "45–60s", rest: "45s",
+        tip: "Posterior pelvic tilt (tuck your tailbone slightly) + glute squeeze + quad squeeze = full body tension plank. This version makes it a genuine anti-extension core exercise, not just a shoulder endurance test. Every second of quality tension counts more than 2 minutes of sagging.",
+        alt: "Dead bug",
+        why: "The plank with proper tension trains the anterior core to resist extension — directly counterbalancing all the spinal extension work (deadlifts, good mornings, back extensions) in this program. Core balance is essential for long-term spine health and posture."
+      },
+      {
+        floor: "bottom",
+        name: "Cable Crunch (Kneeling)",
+        primary: ["Abs"],
+        secondary: ["Core"],
+        sets: 3, reps: "12–15", rest: "45s",
+        tip: "Crunch your sternum toward your pelvis — not your head to your knees. Touch elbows to thighs. The movement comes from the abs shortening, not the hip flexors pulling. Use a weight where you genuinely feel the abs working, not just going through the motion.",
+        alt: "Decline crunch",
+        why: "Cable crunches provide resistance through the full range of ab contraction — bodyweight crunches lose tension at the peak, cables maintain it. Weighted ab training builds genuine ab muscle definition, which combined with body fat reduction gives you visible abdominal definition."
+      },
+      {
+        floor: "top",
+        name: "Rotary Torso Machine",
+        primary: ["Obliques"],
+        secondary: ["Core"],
+        sets: 3, reps: "15 each side", rest: "45s",
+        tip: "Pause for 1 second at end range of each rotation — this is the peak contraction. Control the return. Obliques define the side curve of the waist and are visible from behind in a backless outfit. Training them with resistance builds definition without adding width.",
+        alt: "Cable woodchop",
+        why: "Second oblique session of the week, on a back + core day. Obliques are part of the back aesthetic — they're visible from the side and behind and contribute to the cinched-waist look that makes a backless dress look incredible."
+      },
+    ]
+  }
+];
+
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
+let currentDay = 0;
+let modalDay = 0;
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+const LS = {
+  get: (k, d) => { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : d; } catch { return d; } },
+  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+const getWeight = (d, i) => LS.get(`w_${d}_${i}`, '');
+const saveWeight = (d, i, v) => LS.set(`w_${d}_${i}`, v);
+const getCustom = (d) => LS.get(`cx_${d}`, []);
+const saveCustom = (d, a) => LS.set(`cx_${d}`, a);
+const getCompleted = () => LS.get('completed', {});
+const getLog = () => LS.get('workout_log', []);
+const todayStr = () => new Date().toISOString().split('T')[0];
+
+function markComplete(dayIdx) {
+  const c = getCompleted();
+  const t = todayStr();
+  if (!c[t]) c[t] = [];
+  const key = `${dayIdx}`;
+  if (!c[t].includes(key)) c[t].push(key);
+  LS.set('completed', c);
+  const log = getLog();
+  log.unshift({ date: t, day: DAYS[dayIdx].name, label: DAYS[dayIdx].label });
+  if (log.length > 60) log.pop();
+  LS.set('workout_log', log);
+}
+
+function isDone(dayIdx) {
+  const c = getCompleted(); const t = todayStr();
+  return (c[t] || []).includes(`${dayIdx}`);
+}
+
+// ═══════════════════════════════
+// RENDER WORKOUT
+// ═══════════════════════════════
+function renderPills() {
+  const el = document.getElementById('day-pills');
+  el.innerHTML = DAYS.map((d, i) => `
+    <button class="day-pill ${i === currentDay ? 'active' : ''} ${isDone(i) ? 'done' : ''}"
+      onclick="selectDay(${i})">${d.label}: ${d.name.split(' ')[0]}</button>
+  `).join('');
+}
+
+function selectDay(i) {
+  currentDay = i;
+  renderPills();
+  renderDay();
+  document.getElementById('day-content').scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function renderDay() {
+  const d = DAYS[currentDay];
+  const bottomEx = d.exercises.filter(e => e.floor === 'bottom');
+  const topEx = d.exercises.filter(e => e.floor === 'top');
+
+  let html = `
+    <div class="day-header">
+      <div class="day-title">${d.name}</div>
+      <div class="day-subtitle">${d.subtitle}</div>
+    </div>
+
+    <!-- WHY THIS DAY -->
+    <div class="why-block" id="why-day">
+      <button class="why-toggle" onclick="toggleWhy('why-day')">
+        <div class="why-toggle-label">✦ Why I'm doing this</div>
+        <div class="why-chevron">▾</div>
+      </button>
+      <div class="why-body">
+        <div class="why-text">${d.why}</div>
+      </div>
+    </div>
+
+    <!-- STRETCH WARM-UP -->
+    <div class="stretch-block" id="stretch-day">
+      <button class="stretch-toggle" onclick="toggleStretch('stretch-day')">
+        <div class="stretch-badge">🌸 Stretch Warm-Up — do before you touch a weight</div>
+        <div class="stretch-chevron">▾</div>
+      </button>
+      <div class="stretch-body">
+        <div class="stretch-list">
+          ${d.stretches.map(s => `
+            <div class="stretch-item">
+              <div class="stretch-name">${s.name}</div>
+              <div class="stretch-detail">${s.detail}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  const renderFloor = (exArr, floor) => {
+    if (!exArr.length) return '';
+    const badge = floor === 'top'
+      ? `<div class="floor-label top">🟠 Top Floor · full DB rack · all machines · cables · barbells</div>`
+      : `<div class="floor-label bottom">🔵 Bottom Floor · 1 bench · DBs up to 30 lb · kettlebells</div>`;
+    return `<div class="floor-section">${badge}
+      ${exArr.map(ex => {
+        const absIdx = d.exercises.indexOf(ex);
+        return renderExCard(ex, absIdx, currentDay);
+      }).join('')}
+    </div>`;
+  };
+
+  html += renderFloor(topEx, 'top');
+  html += renderFloor(bottomEx, 'bottom');
+
+  // Custom exercises
+  const customs = getCustom(currentDay);
+  if (customs.length) {
+    html += `<div class="custom-section-title">✦ Added by you</div>`;
+    customs.forEach((ex, ci) => { html += renderCustomCard(ex, ci, currentDay); });
+  }
+
+  const done = isDone(currentDay);
+  html += `
+    <button class="complete-btn ${done ? 'done' : ''}" onclick="doComplete(${currentDay})">
+      ${done ? '✓ Workout Logged' : '✓ Mark Workout Complete'}
+    </button>
+    <button class="add-btn" onclick="openModal(${currentDay})">+ Add Exercise</button>
+  `;
+
+  document.getElementById('day-content').innerHTML = html;
+
+  // Restore weights
+  d.exercises.forEach((_, i) => {
+    const el = document.getElementById(`wi_${i}`);
+    if (el) el.value = getWeight(currentDay, i);
+  });
+  customs.forEach((ex, ci) => {
+    const el = document.getElementById(`cwi_${ci}`);
+    if (el) el.value = ex.weight || '';
+  });
+}
+
+function renderExCard(ex, idx, dayIdx) {
+  return `
+  <div class="ex-card" id="ex_${idx}">
+    <div class="ex-header" onclick="toggleEx('ex_${idx}')">
+      <div class="ex-left">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-tags">
+          ${ex.primary.map(m => `<span class="ex-tag primary">${m}</span>`).join('')}
+          ${ex.secondary.map(m => `<span class="ex-tag">${m}</span>`).join('')}
+        </div>
+        <div class="ex-meta">
+          <div class="ex-meta-chip"><span>${ex.sets}</span> sets</div>
+          <div class="ex-meta-chip">·</div>
+          <div class="ex-meta-chip"><span>${ex.reps}</span> reps</div>
+          <div class="ex-meta-chip">·</div>
+          <div class="ex-meta-chip">rest <span>${ex.rest}</span></div>
+        </div>
+      </div>
+      <div class="ex-chevron">▾</div>
+    </div>
+    <div class="ex-body">
+      <div class="weight-row">
+        <div class="weight-lbl">Weight</div>
+        <input class="weight-inp" id="wi_${idx}" type="text" placeholder="lbs / kg"
+          oninput="onWeight(${dayIdx}, ${idx}, this.value, 'sv_${idx}')">
+        <div class="saved-tag" id="sv_${idx}">saved ✓</div>
+      </div>
+      <div class="info-row">
+        <div class="info-block">
+          <div class="info-lbl">💡 Form tip</div>
+          <div class="info-txt tip">${ex.tip}</div>
+        </div>
+        ${ex.alt ? `<div class="info-block"><div class="info-lbl">🔄 If taken</div><div class="info-txt">${ex.alt}</div></div>` : ''}
+      </div>
+      <div class="ex-why-block" id="exwhy_${idx}">
+        <button class="ex-why-toggle" onclick="toggleExWhy('exwhy_${idx}')">
+          <div class="ex-why-lbl">✦ Why this exercise &amp; why here</div>
+          <div class="ex-why-chev">▾</div>
+        </button>
+        <div class="ex-why-body">
+          <div class="ex-why-text">${ex.why}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCustomCard(ex, ci, dayIdx) {
+  return `
+  <div class="ex-card custom-ex" id="cex_${ci}">
+    <div class="ex-header" onclick="toggleEx('cex_${ci}')">
+      <div class="ex-left">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-tags"><span class="ex-tag primary">${ex.muscle || 'Custom'}</span></div>
+        <div class="ex-meta">
+          <div class="ex-meta-chip"><span>${ex.sets || 3}</span> sets</div>
+          <div class="ex-meta-chip">·</div>
+          <div class="ex-meta-chip"><span>${ex.reps || '10–12'}</span> reps</div>
+          <div class="ex-meta-chip">·</div>
+          <div class="ex-meta-chip">rest <span>${ex.rest || '60s'}</span></div>
+        </div>
+      </div>
+      <div class="ex-chevron">▾</div>
+    </div>
+    <div class="ex-body">
+      <div class="weight-row">
+        <div class="weight-lbl">Weight</div>
+        <input class="weight-inp" id="cwi_${ci}" type="text" placeholder="lbs / kg"
+          oninput="onCustomWeight(${dayIdx}, ${ci}, this.value)">
+        <div class="saved-tag" id="csv_${ci}">saved ✓</div>
+      </div>
+      ${ex.tip ? `<div class="info-block" style="margin-bottom:8px"><div class="info-lbl">💡 Tip</div><div class="info-txt tip">${ex.tip}</div></div>` : ''}
+      <button class="remove-btn" onclick="removeCustom(${dayIdx}, ${ci})">Remove exercise</button>
+    </div>
+  </div>`;
+}
+
+// toggles
+function toggleEx(id) { document.getElementById(id).classList.toggle('open'); }
+function toggleWhy(id) { document.getElementById(id).classList.toggle('open'); }
+function toggleStretch(id) { document.getElementById(id).classList.toggle('open'); }
+function toggleExWhy(id) { event.stopPropagation(); document.getElementById(id).classList.toggle('open'); }
+
+function onWeight(dayIdx, exIdx, val, svId) {
+  saveWeight(dayIdx, exIdx, val);
+  const t = document.getElementById(svId);
+  if (t) { t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1400); }
+}
+function onCustomWeight(dayIdx, ci, val) {
+  const cx = getCustom(dayIdx);
+  if (cx[ci]) { cx[ci].weight = val; saveCustom(dayIdx, cx); }
+  const t = document.getElementById(`csv_${ci}`);
+  if (t) { t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1400); }
+}
+function removeCustom(dayIdx, ci) {
+  const cx = getCustom(dayIdx); cx.splice(ci, 1); saveCustom(dayIdx, cx); renderDay();
+}
+function doComplete(dayIdx) {
+  markComplete(dayIdx); renderPills(); renderDay();
+}
+
+// ═══════════════════════════════
+// MODAL
+// ═══════════════════════════════
+function openModal(dayIdx) {
+  modalDay = dayIdx;
+  document.getElementById('modal-overlay').classList.add('show');
+  switchMTab('write');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('show'); }
+function closeModalBg(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+function switchMTab(tab) {
+  document.getElementById('mtab-write').classList.toggle('active', tab === 'write');
+  document.getElementById('mtab-copy').classList.toggle('active', tab === 'copy');
+  document.getElementById('mpanel-write').style.display = tab === 'write' ? '' : 'none';
+  document.getElementById('mpanel-copy').style.display = tab === 'copy' ? '' : 'none';
+  if (tab === 'copy') renderCopyList();
+}
+function addCustomEx() {
+  const name = document.getElementById('fn').value.trim();
+  if (!name) { alert('Please enter an exercise name.'); return; }
+  const ex = {
+    name,
+    sets: document.getElementById('fs').value || 3,
+    reps: document.getElementById('fr').value || '10–12',
+    weight: document.getElementById('fw').value || '',
+    rest: document.getElementById('frt').value || '60s',
+    floor: document.getElementById('ff').value,
+    muscle: document.getElementById('fm').value || 'Custom',
+    tip: document.getElementById('fti').value || '',
+    alt: document.getElementById('fa').value || '',
+  };
+  const cx = getCustom(modalDay); cx.push(ex); saveCustom(modalDay, cx);
+  closeModal();
+  ['fn','fs','fr','fw','frt','fm','fti','fa'].forEach(id => { document.getElementById(id).value = ''; });
+  renderDay();
+}
+function renderCopyList() {
+  const dayFilter = document.getElementById('cf-day').value;
+  // Populate day options
+  const sel = document.getElementById('cf-day');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">All Days</option>';
+  DAYS.forEach((d, i) => {
+    const o = document.createElement('option');
+    o.value = i; o.textContent = `${d.label}: ${d.name}`;
+    sel.appendChild(o);
+  });
+  if (prev) sel.value = prev;
+
+  const list = document.getElementById('copy-list');
+  let html = '';
+  DAYS.forEach((d, di) => {
+    if (dayFilter !== '' && parseInt(dayFilter) !== di) return;
+    d.exercises.forEach(ex => {
+      html += `<div class="copy-item" onclick='copyEx(${JSON.stringify(JSON.stringify(ex))})'>
+        <div class="copy-item-name">${ex.name}</div>
+        <div class="copy-item-meta">${d.label} · ${ex.primary.join(', ')} · ${ex.sets}×${ex.reps}</div>
+      </div>`;
+    });
+  });
+  list.innerHTML = html || '<div class="empty-state"><div class="empty-txt">No exercises found.</div></div>';
+}
+function copyEx(jsonStr) {
+  const ex = JSON.parse(jsonStr);
+  const cx = getCustom(modalDay);
+  cx.push({ name: ex.name, sets: ex.sets, reps: ex.reps, weight: '', rest: ex.rest, floor: ex.floor, muscle: ex.primary.join(', '), tip: ex.tip, alt: ex.alt });
+  saveCustom(modalDay, cx); closeModal(); renderDay();
+}
+
+// ═══════════════════════════════
+// VIEW SWITCHING
+// ═══════════════════════════════
+function switchView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`view-${name}`).classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+  if (name === 'dashboard') renderDash();
+  if (name === 'calendar') renderCal();
+}
+
+// ═══════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════
+function renderDash() {
+  const now = new Date();
+  const h = now.getHours();
+  const greet = h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,';
+  document.getElementById('dash-greeting').innerHTML = `${greet}<br><em>let's build.</em>`;
+  document.getElementById('dash-date').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+
+  const log = getLog();
+  const completed = getCompleted();
+  const t = todayStr();
+  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  let wk = 0, mo = 0;
+  Object.keys(completed).forEach(ds => {
+    const d = new Date(ds + 'T12:00:00');
+    if (d >= weekStart) wk += (completed[ds]||[]).length;
+    if (d >= monthStart) mo += (completed[ds]||[]).length;
+  });
+
+  // streak
+  let streak = 0, check = new Date(now);
+  for (let i = 0; i < 365; i++) {
+    const ds = check.toISOString().split('T')[0];
+    if (completed[ds]?.length) { streak++; check.setDate(check.getDate()-1); }
+    else if (i === 0) { check.setDate(check.getDate()-1); }
+    else break;
+  }
+
+  // goal rate
+  const fa = new Date(now); fa.setDate(now.getDate()-28);
+  let active = 0;
+  let dc = new Date(fa);
+  while (dc <= now) {
+    const ds = dc.toISOString().split('T')[0];
+    if (completed[ds]?.length) active++;
+    dc.setDate(dc.getDate()+1);
+  }
+
+  document.getElementById('streak-num').textContent = streak;
+  document.getElementById('total-wk').textContent = log.length;
+  document.getElementById('sw').textContent = wk;
+  document.getElementById('sm').textContent = mo;
+  document.getElementById('spct').textContent = Math.min(Math.round((active/20)*100), 100) + '%';
+
+  const rEl = document.getElementById('recent-list');
+  if (!log.length) {
+    rEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🌙</div><div class="empty-txt">No workouts logged yet.<br>Complete your first day to start tracking.</div></div>`;
+  } else {
+    rEl.innerHTML = log.slice(0,6).map(item => `
+      <div class="recent-item">
+        <div>
+          <div class="recent-day">${item.day}</div>
+          <div class="recent-date">${item.label} · ${new Date(item.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+        </div>
+        <div class="recent-check">✓</div>
+      </div>`).join('');
+  }
+}
+
+// ═══════════════════════════════
+// CALENDAR
+// ═══════════════════════════════
+function calNav(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCal();
+}
+
+function renderCal() {
+  const completed = getCompleted();
+  const now = new Date(); const today = todayStr();
+  document.getElementById('cal-lbl').textContent = new Date(calYear, calMonth, 1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const dows = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  let html = dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  for (let i=0;i<firstDay;i++) html+=`<div class="cal-day empty"></div>`;
+  for (let day=1;day<=daysInMonth;day++) {
+    const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isToday = ds === today;
+    const isDone = completed[ds]?.length > 0;
+    let cls = 'cal-day';
+    if (isToday) cls += ' today';
+    else if (isDone) cls += ' done';
+    html += `<div class="${cls}" onclick="showDayInfo('${ds}')">${day}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+
+  const log = getLog();
+  const lEl = document.getElementById('log-list');
+  if (!log.length) {
+    lEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-txt">Complete workouts to see your log here.</div></div>`;
+  } else {
+    lEl.innerHTML = log.slice(0,20).map(item => `
+      <div class="log-item">
+        <div class="log-head">
+          <div class="log-title">${item.day}</div>
+          <div class="log-date">${new Date(item.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+        </div>
+        <div class="ex-tags"><span class="ex-tag">${item.label}</span></div>
+      </div>`).join('');
+  }
+}
+
+function showDayInfo(ds) {
+  const completed = getCompleted();
+  if (completed[ds]?.length) {
+    const log = getLog().filter(l => l.date === ds);
+    if (log.length) alert(`${new Date(ds+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}\n\n✓ ${log.map(l=>l.day).join('\n✓ ')}`);
+  }
+}
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+function init() {
+  // Populate day filter in modal
+  const sel = document.getElementById('cf-day');
+  DAYS.forEach((d,i) => {
+    const o = document.createElement('option');
+    o.value = i; o.textContent = `${d.label}: ${d.name}`;
+    sel.appendChild(o);
+  });
+  renderPills();
+  renderDay();
+}
+
+init();
+</script>
+</body>
+</html>
